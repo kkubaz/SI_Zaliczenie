@@ -1,22 +1,22 @@
 W pliku requirements.txt znajdują się niezbędne do instalacji biblioteki
 
 Uruchomienie Projektu
-docker compose up
+*docker compose up*
 
 [Terminal_1]
-  python -m src.producer.main
+  *python -m src.producer.main*
 Produkcja przykładowych pomiarów
 
 [Terminal_2]
-  python -m src.consumer.main
+  *python -m src.consumer.main*
 Przechwytywanie danych pomiarowych 
 
 [Terminal_3]
-  python -m uvicorn src.api.main:app --reload
+  *python -m uvicorn src.api.main:app*
 Uruchomienie API
 
 [Terminal_4]
-  python -m src.api.gradio_app
+  *python -m src.api.gradio_app*
 Uruchomienie UI
 
 Dostępy
