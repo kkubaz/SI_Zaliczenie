@@ -1,0 +1,11 @@
+confluent-kafka
+pandas
+numpy
+scikit-learn
+qdrant-client
+sentence-transformers
+fastapi
+uvicorn
+gradio
+requests
+python-dotenv
