@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-
 from src.rag.vector_store import VectorStore
 from src.rag.explainer import AnomalyExplainer
-
 
 app = FastAPI(
     title="Air Quality Anomaly RAG API",
@@ -13,7 +11,6 @@ app = FastAPI(
 
 store = None
 explainer = None
-
 
 class AirQualityMeasurement(BaseModel):
     city: str
@@ -29,13 +26,8 @@ class AirQualityMeasurement(BaseModel):
 @app.on_event("startup")
 def startup_event():
     global store, explainer
-
-    print("Inicjalizacja Qdrant...")
     store = VectorStore()
-
-    print("Inicjalizacja modelu językowego...")
     explainer = AnomalyExplainer()
-
 
 @app.get("/")
 def root():

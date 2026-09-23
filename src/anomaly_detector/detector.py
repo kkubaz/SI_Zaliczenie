@@ -1,4 +1,3 @@
-
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 FEATURES = [
@@ -21,5 +20,4 @@ class AnomalyDetector:
 
     def predict(self, df: pd.DataFrame):
         predictions = self.model.predict(df[FEATURES])
-
         return predictions == -1

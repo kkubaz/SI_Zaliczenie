@@ -1,24 +1,12 @@
 import json
 from pathlib import Path
-
 import gradio as gr
-
 from src.rag.vector_store import VectorStore
 from src.rag.explainer import AnomalyExplainer
 
-
 DATA_FILE = Path("data/anomalies.jsonl")
-
-
-print("Uruchamianie Gradio...")
-print("Ładowanie Qdrant...")
 store = VectorStore()
-
-print("Ładowanie modelu językowego...")
 explainer = AnomalyExplainer()
-
-print("Gradio jest gotowe.")
-
 
 def load_anomalies():
 
@@ -50,7 +38,6 @@ def load_anomalies():
 
     return anomalies
 
-
 def format_timestamp(timestamp):
 
     if not timestamp:
@@ -70,10 +57,6 @@ def find_previous_anomalies(anomaly):
         f"Wilgotność: {anomaly.get('humidity', '')}. "
         f"Ciśnienie: {anomaly.get('pressure', '')}."
     )
-
-    print()
-    print("========================================")
-    print("Wyszukiwanie podobnych anomalii...")
     print(query)
 
     results = store.search_similar(
@@ -89,7 +72,6 @@ def find_previous_anomalies(anomaly):
 
         payload = result.payload or {}
 
-        # bez aktualnie analizowanej anomalii
         if (
             current_timestamp
             and payload.get("timestamp") == current_timestamp
@@ -101,21 +83,13 @@ def find_previous_anomalies(anomaly):
         if len(previous) >= 3:
             break
 
-    print(f"Znaleziono podobnych anomalii: {len(previous)}")
-    print("========================================")
+    print(f"Podobnych anomalii: {len(previous)}")
 
     return previous
 
-
 def explain_anomaly(anomaly):
 
-    print()
-    print("========================================")
-    print("KLIKNIĘTO PRZYCISK WYJAŚNIJ")
-    print("========================================")
-
     if not anomaly:
-        print("Brak anomalii.")
         return "Nie wybrano anomalii."
 
     print("Analizowana anomalia:")
@@ -124,21 +98,14 @@ def explain_anomaly(anomaly):
     try:
 
         previous_anomalies = find_previous_anomalies(anomaly)
-
-        print("Uruchamianie modelu Qwen...")
-
         explanation = explainer.explain(
             anomaly,
             previous_anomalies
         )
-
-        print("Analiza została wygenerowana.")
-
         return explanation
 
     except Exception as error:
 
-        print()
         print("!!! BŁĄD PODCZAS ANALIZY !!!")
         print(error)
 
@@ -163,10 +130,6 @@ with gr.Blocks(
 
     gr.Markdown(
         """
-# Detekcja anomalii jakości powietrza
-
-Historia wykrytych anomalii w strumieniu danych IoT.
-
 Kliknij **Wyjaśnij**, aby przeanalizować wybraną anomalię
 z wykorzystaniem wcześniejszych podobnych zdarzeń
 znajdujących się w bazie Qdrant.
@@ -174,7 +137,7 @@ znajdujących się w bazie Qdrant.
     )
 
     refresh_button = gr.Button(
-        "🔄 Odśwież listę anomalii"
+        "Odśwież listę anomalii"
     )
 
     analysis_output = gr.Markdown(
@@ -249,37 +212,15 @@ znajdujących się w bazie Qdrant.
                     "Wyjaśnij",
                     size="sm"
                 )
-
-                # Najważniejsza zmiana:
-                # funkcja przechowuje konkretną anomalię
                 explain_button.click(
                     fn=create_explain_function(anomaly),
                     inputs=[],
                     outputs=analysis_output
                 )
 
-    gr.Markdown("---")
-
-    gr.Markdown(
-        """
-### Jak działa analiza?
-
-1. System wybiera anomalię z historii.
-2. Dane anomalii są zamieniane na wektor.
-3. Qdrant wyszukuje podobne zdarzenia.
-4. Podobne anomalie są przekazywane jako kontekst RAG.
-5. Model **Qwen2.5-1.5B-Instruct** analizuje aktualną anomalię.
-6. Wynik jest wyświetlany powyżej tabeli.
-
-Model językowy jest wcześniej wytrenowany i nie jest
-trenowany ponownie w ramach projektu.
-"""
-    )
-
-
 if __name__ == "__main__":
 
     demo.launch(
-        server_name="0.0.0.0",
+        server_name="127.0.0.1",
         server_port=7860
     )

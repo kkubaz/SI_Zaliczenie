@@ -28,7 +28,6 @@ ANOMALIES_FILE = os.path.join(
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-
 def create_consumer():
     consumer = Consumer({
         "bootstrap.servers": KAFKA_BOOTSTRAP_SERVERS,
@@ -39,7 +38,6 @@ def create_consumer():
     consumer.subscribe([KAFKA_TOPIC])
 
     return consumer
-
 
 def train_model(df):
     model = IsolationForest(
@@ -73,7 +71,6 @@ def save_anomaly(data, score):
 
     print(json.dumps(anomaly, indent=2, ensure_ascii=False))
 
-
 def main():
     consumer = create_consumer()
     training_data = []
@@ -87,7 +84,7 @@ def main():
                 continue
 
             if msg.error():
-                print(f"Blad Kafka: {msg.error()}")
+                print(f"Błąd Kafka: {msg.error()}")
                 continue
 
             data = json.loads(

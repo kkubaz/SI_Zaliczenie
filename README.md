@@ -1,15 +1,16 @@
-# SI_Zaliczenie
+W pliku requirements.txt znajdują się niezbędne do instalacji biblioteki
 
-Uruchomienie Projektu
+#Uruchomienie Projektu
+docker compose up;
 
->docker compose up
->.\.venv.\Scripts\Activate.ps1
->[T1]
->python -m src.producer.main
->[T2]
->python -m src.consumer.main
->[T3]
->uvicorn src.api.main:app --reload
->[T4]
->python -m src.api.gradio_app
->localhost:7860
+##[Terminal_1]
+python -m src.producer.main
+##[Terminal_2]
+python -m src.consumer.main
+##[Terminal_3]
+python -m uvicorn src.api.main:app --reload
+##[Terminal_4]
+python -m src.api.gradio_app
+
+#Dostępy
+Aplikacja (Gradio) - localhost:7860

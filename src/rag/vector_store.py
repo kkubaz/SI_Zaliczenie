@@ -1,20 +1,15 @@
-
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
     Distance,
     VectorParams,
     PointStruct
 )
-
 from sentence_transformers import SentenceTransformer
-
 
 QDRANT_URL = "http://localhost:6333"
 COLLECTION_NAME = "air_quality_anomalies"
-
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 VECTOR_SIZE = 384
-
 
 class VectorStore:
 
@@ -90,10 +85,6 @@ class VectorStore:
         self.client.upsert(
             collection_name=COLLECTION_NAME,
             points=[point]
-        )
-
-        print(
-            "Anomalia zapisana w Qdrant."
         )
 
     def create_description(self, anomaly: dict):

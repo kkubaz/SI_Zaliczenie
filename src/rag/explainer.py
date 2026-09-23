@@ -1,37 +1,19 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-
 class AnomalyExplainer:
-    """
-    Wyjaśnianie anomalii przy użyciu gotowego,
-    wcześniej wytrenowanego modelu Qwen2.5-1.5B-Instruct.
-
-    Model nie jest trenowany w ramach projektu.
-    Jest wykorzystywany wyłącznie do generowania
-    opisu na podstawie danych i kontekstu RAG.
-    """
-
     def __init__(self):
-        print("Ładowanie modelu Qwen2.5-1.5B-Instruct...")
-
         self.model_name = "Qwen/Qwen2.5-1.5B-Instruct"
-
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name
         )
-
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype="auto"
         )
-
         self.model.eval()
 
-        print("Model Qwen2.5-1.5B-Instruct został załadowany.")
-
     def build_messages(self, anomaly: dict, similar_anomalies: list):
-
         similar_context = []
 
         for index, item in enumerate(similar_anomalies[:3], start=1):
@@ -52,16 +34,9 @@ Ciśnienie: {payload.get('pressure', 'brak')}
 
         system_message = """
 Jesteś ekspertem analizującym dane dotyczące jakości powietrza.
-
-Twoim zadaniem jest przygotowanie krótkiego, rzeczowego
-wyjaśnienia wykrytej anomalii.
-
+Twoim zadaniem jest przygotowanie krótkiego, rzeczowego wyjaśnienia wykrytej anomalii.
 Nie wymyślaj faktów.
-Nie twierdź, że znasz rzeczywistą przyczynę anomalii,
-jeżeli nie wynika ona bezpośrednio z danych.
-
-Możesz wskazać możliwe przyczyny jako hipotezy.
-
+Wskaż możliwe przyczyny jako hipotezy.
 Odpowiadaj wyłącznie po polsku.
 Nie powtarzaj całych danych wejściowych.
 """.strip()
@@ -77,7 +52,7 @@ Temperatura: {anomaly.get('temperature', 'brak')}
 Wilgotność: {anomaly.get('humidity', 'brak')}
 Ciśnienie: {anomaly.get('pressure', 'brak')}
 
-Podobne anomalie znalezione w bazie Qdrant:
+Podobne anomalie występujące wcześniej na obszarze:
 
 {similar_text if similar_text else "Brak podobnych anomalii."}
 
@@ -107,9 +82,6 @@ Odpowiedź powinna mieć około 3-6 zdań.
             anomaly,
             similar_anomalies
         )
-
-        # Oficjalny sposób przygotowania rozmowy
-        # dla modeli Qwen Instruct.
         inputs = self.tokenizer.apply_chat_template(
             messages,
             add_generation_prompt=True,
@@ -117,7 +89,6 @@ Odpowiedź powinna mieć około 3-6 zdań.
             return_dict=True,
             return_tensors="pt"
         )
-
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
@@ -128,7 +99,6 @@ Odpowiedź powinna mieć około 3-6 zdań.
                 repetition_penalty=1.15
             )
 
-        # Usuwamy tokeny odpowiadające promptowi.
         generated_tokens = outputs[0][
             inputs["input_ids"].shape[-1]:
         ]

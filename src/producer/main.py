@@ -2,9 +2,7 @@ import json
 import random
 import time
 from datetime import datetime, timezone
-
 from confluent_kafka import Producer
-
 
 KAFKA_BOOTSTRAP_SERVERS = "localhost:9092"
 KAFKA_TOPIC = "air_quality"
@@ -28,7 +26,6 @@ def generate_measurement():
 
     return measurement
 
-
 def delivery_report(err, msg):
     if err is not None:
         print(f"Blad dostarczenia: {err}")
@@ -41,8 +38,6 @@ def delivery_report(err, msg):
 
 
 def main():
-    print("Generator danych - start")
-
     try:
         while True:
             measurement = generate_measurement()
