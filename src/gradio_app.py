@@ -136,10 +136,6 @@ znajdujących się w bazie Qdrant.
 """
     )
 
-    refresh_button = gr.Button(
-        "Odśwież listę anomalii"
-    )
-
     analysis_output = gr.Markdown(
         "Wybierz anomalię i kliknij **Wyjaśnij**.",
         label="Analiza",
@@ -148,7 +144,7 @@ znajdujących się w bazie Qdrant.
 
     gr.Markdown("## Historia anomalii")
 
-    @gr.render(inputs=refresh_button)
+    @gr.render()
     def render_anomalies(_=None):
 
         anomalies = load_anomalies()
