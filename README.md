@@ -1,5 +1,11 @@
 W pliku requirements.txt znajdują się niezbędne do instalacji biblioteki
 
+# Opis plików
+producer.py - imituje urzadzenie do pomiaru parametrów powietrza i wysyła je do Kafki
+
+consumer.py - odbiera dane z Kafki
+
+
 # Uruchomienie Projektu
 
 *docker compose up*
