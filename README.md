@@ -18,6 +18,7 @@ src/rag/vector_store.py - definicja klasy VectorStore odpowiedzialnej za komunik
 # Uruchomienie Projektu
 
   >`docker compose up`
+
 Uruchamia 3 kontenery w Docker Desktop
 - qdrant: wektorowa baza danych
 - kafka: broker wiadomości
