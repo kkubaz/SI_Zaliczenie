@@ -1,7 +1,7 @@
 # Opis plików
 requirements.txt - niezbędne biblioteki
 
-docker-compose.yml - plik do 
+docker-compose.yml - definicje kontenerów
 
 src/producer.py - imituje urzadzenie do pomiaru parametrów powietrza i wysyła je do Kafki
 
