@@ -1,14 +1,23 @@
-W pliku requirements.txt znajdują się niezbędne do instalacji biblioteki
-
 # Opis plików
-producer.py - imituje urzadzenie do pomiaru parametrów powietrza i wysyła je do Kafki
+requirements.txt - niezbędne biblioteki
 
-consumer.py - odbiera dane z Kafki
+docker-compose.yml - plik do 
 
+src/producer.py - imituje urzadzenie do pomiaru parametrów powietrza i wysyła je do Kafki
+
+src/consumer.py - odbiera dane z Kafki. Następnie trenuje *IsolationForest* za pomoca 50 pierwszych odczytów i na jego podstawie odróżnia normalne pomiary od anomalii. Następnie wykryte anomalie zapisuje lokalnie do pliku *data/anomalies.jsonl* i do bazy Qdrant.
+
+src/api.py - FAST API
+
+src/gradio_app.py - UI aplikacji stworzone za pomocą *gradio*. Korzysta z klasy VectorStore do wyszukiwania podobnych anomalii do wybranej i AnomalyExplainer do generacji wyjaśnienia anomalii.. 
+
+src/rag/explainer.py - definicja klasy AnomalyExplainer odpowiedzialnej za obsługę pretrenowanego modelu Qwen2.5-1.5B-Instruct z Hugging Face.
+
+src/rag/vector_store.py - definicja klasy VectorStore odpowiedzialnej za komunikację z quadrant i embedding. Korzysta z *sentence_transformers* z modelu *all-MiniLM-L6-v2*
 
 # Uruchomienie Projektu
 
-*docker compose up*
+  >`docker compose up`
 Uruchamia 3 kontenery w Docker Desktop
 - qdrant: wektorowa baza danych
 - kafka: broker wiadomości
